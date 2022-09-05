@@ -1,5 +1,5 @@
 {
-  "name": "portapi",
+  "name": "portapi-helper",
   "version": "0.0.1",
   "description": "Make multifarious requests to any server with ease.",
   "main": "index.js",

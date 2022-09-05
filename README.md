@@ -16,6 +16,42 @@ myAPI.post('blog', {
 
 PortAPI has several useful functions that simplify frontend-to-backend communication, namely reading, creating, and manipulating data.
 
+## Installation
+
+Create a new project folder or open an existing one and install the PortAPI helper:
+
+```bash
+npm i portapi-helper
+```
+
+Create the file `API.js` and point the helper to a local or live server
+
+```javascript
+// API.js
+import API from 'portapi';
+
+const server = "http://localhost:3030/api/" // API's base url
+export default new API(server)
+```
+
+Use the helper anywhere in your project
+
+```javascript
+import API from './API.js'
+
+tutoruuAPI.get('user').then(data => {
+  console.log(data)
+})
+```
+Output
+
+``` bash
+{
+  "users": [...],
+  "total": 1782
+}
+```
+
 ## Usage
 
 As we've just seen, it is very simple to make a request to an unauthenticated server. What if we want to establish authenticated connections? Moreover, what if we want to add options to the request, such as content-type, caching, cors, refferrer, etc.? There's a simple, declarative way to do it with PortAPI:
