@@ -1,0 +1,19 @@
+{
+  "name": "portapi",
+  "version": "0.0.1",
+  "description": "Make multifarious requests to any server with ease.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "/youssef-ahamid/PortAPI"
+  },
+  "keywords": [
+    "helper",
+    "api"
+  ],
+  "author": "youssef-ahamid",
+  "license": "MIT"
+}
