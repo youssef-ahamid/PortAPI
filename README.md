@@ -1,6 +1,6 @@
 # PortAPI
 
-PortAPI allows developers to send requests from the client-side to any backend server in a couple lines of code
+Send requests from the client-side to any backend server in a couple lines of code
 
 ## A simple API request
 
