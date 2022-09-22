@@ -1,8 +1,8 @@
 export function parsePopulate(populate) {
     let q = ""
     if (populate) {
-        if (Array.isArray(populate?.paths))
-            populate.paths = populate.paths.join("+");
+        if (Array.isArray(populate.paths))
+          populate.paths = populate.paths.join("+");
         q += `populate=${populate.paths}&`;
     }
 
