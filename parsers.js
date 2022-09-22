@@ -1,6 +1,10 @@
 export function parsePopulate(populate) {
     let q = ""
-    if (populate) q += `populate=${serialize(populate.paths)}&`
+    if (populate) {
+        if (Array.isArray(populate?.paths))
+            populate.paths = populate.paths.join("+");
+        q += `populate=${populate.paths}&`;
+    }
 
     return q
 }
@@ -29,9 +33,14 @@ export function parseFilter(filter = {}) {
 
 export function parseSearch(search = {}) {
     let q = ""
+   
+
     if (search.prop) q += `search_prop=${search.prop}&`
     if (search.value) q += `search_query=${search.value}&`
-    if (search.paths) q += `search_paths=${serialize(search.paths)}&`
+    if (search.paths) {
+        if (Array.isArray(search.paths)) search.paths = search.paths.join("+");
+        q += `search_paths=${search.paths}&`;
+    }
     if (search.caseSensitive) q += `search_case_sensitive=true&`
 
     return q
@@ -54,17 +63,3 @@ export function parsePaginate(paginate = {}) {
     return q
 }
 
-export function serialize(obj, prefix) {
-    var str = [],
-        p;
-    for (p in obj) {
-        if (obj.hasOwnProperty(p)) {
-            var k = prefix ? prefix + "[" + p + "]" : p,
-                v = obj[p];
-            str.push((v !== null && typeof v === "object") ?
-                serialize(v, k) :
-                encodeURIComponent(k) + "=" + encodeURIComponent(v));
-        }
-    }
-    return str.join("&");
-}
