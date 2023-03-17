@@ -14,7 +14,7 @@ type Data<T = any> = T extends PortAPIError ? never : T;
 
 export function createPortAPIResponse<T, R extends boolean>(
   success: R,
-  data: R extends true ? T : PortAPIError,
+  data: R extends true ? T : PortAPIError
 ): PortAPIResponse<T, R> {
   if (success) {
     return {

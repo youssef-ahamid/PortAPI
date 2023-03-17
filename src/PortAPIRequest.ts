@@ -1,10 +1,7 @@
 import fetch from 'cross-fetch';
 import { z } from 'zod';
 import { createPortAPIError } from './PortAPIError';
-import {
-  PortAPIResponse,
-  createPortAPIResponse
-} from './PortAPIResponse';
+import { PortAPIResponse, createPortAPIResponse } from './PortAPIResponse';
 
 export type Method =
   | 'GET'

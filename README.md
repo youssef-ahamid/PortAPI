@@ -6,9 +6,9 @@ Send requests from the client-side to any backend server in a couple lines of co
 
 ```javascript
 import API from 'portapi';
-const myAPI = new API("api-url");
+const myAPI = new API('api-url');
 
-myAPI.post('blog', { 
+myAPI.post('blog', {
   title: 'Intro to PortAPI',
   content: '<p>Making requests with PortAPI is easy!</p>'
 });
@@ -30,22 +30,23 @@ Create the file `API.js` and point the helper to a local or live server
 // API.js
 import API from 'portapi';
 
-const server = "http://localhost:3030/api/" // API's base url
-export default new API(server)
+const server = 'http://localhost:3030/api/'; // API's base url
+export default new API(server);
 ```
 
 Use the helper anywhere in your project
 
 ```javascript
-import API from './API.js'
+import API from './API.js';
 
-tutoruuAPI.get('user').then(data => {
-  console.log(data)
-})
+tutoruuAPI.get('user').then((data) => {
+  console.log(data);
+});
 ```
+
 Output
 
-``` bash
+```bash
 {
   "users": [...],
   "total": 1782
@@ -57,13 +58,13 @@ Output
 As we've just seen, it is very simple to make a request to an unauthenticated server. What if we want to establish authenticated connections? Moreover, what if we want to add options to the request, such as content-type, caching, cors, refferrer, etc.? There's a simple, declarative way to do it with PortAPI:
 
 ```javascript
-const myAPI = new API("api-url", {
+const myAPI = new API('api-url', {
   headers: {
-    authorization: "Bearer SOME_TOKEN",
-    contentType: "application/x-www-form-urlencoded", // defaults to 'application/json'
+    authorization: 'Bearer SOME_TOKEN',
+    contentType: 'application/x-www-form-urlencoded' // defaults to 'application/json'
   },
   mode: 'cors', // no-cors, *cors, same-origin
-  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+  cache: 'no-cache' // *default, no-cache, reload, force-cache, only-if-cached
 });
 ```
 
@@ -105,8 +106,8 @@ Execute a `POST` request
 
 ```javascript
 const users = await myAPI.post('user', {
-  name: "PortAPI User",
-  email: "example@domain.com"
+  name: 'PortAPI User',
+  email: 'example@domain.com'
 });
 ```
 
@@ -116,7 +117,7 @@ Execute a `PATCH` request
 
 ```javascript
 const user = await myAPI.patch('user/USER_ID', {
-  name: "Updated PortAPI User"
+  name: 'Updated PortAPI User'
 });
 ```
 
@@ -136,9 +137,9 @@ Weighted full-text search
 
 ```javascript
 const users = await myAPI.search('user', {
-  paths: ["name", "email"],
+  paths: ['name', 'email'],
   caseSensitive: true, // default is false
-  value: "PortAPI"
+  value: 'PortAPI'
 });
 ```
 
@@ -156,7 +157,7 @@ const users = await myAPI.search('user', {
       weight: 0.7
     }
   ],
-  value: "PortAPI"
+  value: 'PortAPI'
 });
 ```
 
@@ -167,7 +168,7 @@ Returns sorted resources
 ```javascript
 // sorts the user by name in a descending fashion
 const users = await myAPI.sort('user', {
-  prop: "name", 
+  prop: "name",
   direction: "desc" // defaults to 'asc',
   function: 'locale' // comparison logic. Defaults to number comparison.
 });
@@ -180,9 +181,9 @@ Returns filtered resources
 ```javascript
 // returns users with 'example' in their email
 const users = await myAPI.filter('user', {
-  value: "example",
-  prop: "email",
-  function: "in"
+  value: 'example',
+  prop: 'email',
+  function: 'in'
 });
 ```
 
@@ -207,32 +208,32 @@ Get items created/updated in a given timeframe
 ```javascript
 // gets users created in August 2022
 const users = await myAPI.timebox('user', {
-  created_after: "2022-08-01",
-  created_before: "2022-08-31"
+  created_after: '2022-08-01',
+  created_before: '2022-08-31'
 });
 ```
 
 This assumes that there's a date prop on the model, createdAt, that tracks when the resource was created. No worries iff it's tracked by a different prop, we can specify it in the timebox options:
 
 ```javascript
-// gets users created in August 2022, using the 
+// gets users created in August 2022, using the
 // "timestamp" property on the user
 const users = await myAPI.timebox('user', {
-  created_after: "2022-08-01",
-  created_before: "2022-08-31",
-  created_prop: "timestamp"
+  created_after: '2022-08-01',
+  created_before: '2022-08-31',
+  created_prop: 'timestamp'
 });
 ```
 
 This works exactly the same for timeboxing updated resourses
 
 ```javascript
-// gets users updated in August 2022, using the 
+// gets users updated in August 2022, using the
 // "updated_timestamp" property on the user
 const users = await myAPI.timebox('user', {
-  updated_after: "2022-08-01",
-  updated_before: "2022-08-31",
-  updated_prop: "updated_timestamp"
+  updated_after: '2022-08-01',
+  updated_before: '2022-08-31',
+  updated_prop: 'updated_timestamp'
 });
 ```
 
@@ -241,7 +242,7 @@ const users = await myAPI.timebox('user', {
 (mongoDB only) Get a populated resource
 
 ```javascript
-// gets the users populated reviews as well as his 
+// gets the users populated reviews as well as his
 // classes, their students, and each of their reviews
 const users = await myAPI.populate('user/USER_ID', [
   'reviews',
@@ -257,8 +258,8 @@ Execute multiple query functions at once. It's very common to paginate search re
 // get the first 25 search results
 const users = await myAPI.query('user', {
   search: {
-    paths: ["name", "email"],
-    value: "PortAPI"
+    paths: ['name', 'email'],
+    value: 'PortAPI'
   },
   paginate: {
     limit: 25,
@@ -270,8 +271,8 @@ const users = await myAPI.query('user', {
 Similarly, we can add any of the above methods to the query options as props
 
 ```javascript
-// searches users created in august that contain 
-// example in their email, and returns the first 
+// searches users created in august that contain
+// example in their email, and returns the first
 // 25 results
 const users = await myAPI.query('user', {
   timebox: {
