@@ -29,7 +29,7 @@ export function createPortAPIResponse<T, R extends boolean>(
   } as unknown as PortAPIResponse<T, R>;
 }
 
-export type PortAPIResponse<T, R extends boolean = true> = R extends true
+export type PortAPIResponse<T, R extends boolean = boolean> = R extends true
   ? PortAPISuccessResponse<T>
   : R extends false
   ? PortAPIErrorResponse

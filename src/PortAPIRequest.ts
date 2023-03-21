@@ -3,15 +3,8 @@ import { z } from 'zod';
 import { createPortAPIError } from './PortAPIError';
 import { PortAPIResponse, createPortAPIResponse } from './PortAPIResponse';
 
-export type Method =
-  | 'GET'
-  | 'POST'
-  | 'PUT'
-  | 'PATCH'
-  | 'DELETE'
-  | 'HEAD'
-  | 'OPTIONS'
-  | 'TRACE';
+export const methods = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS', 'TRACE'] as const;
+export type Method = typeof methods[number];
 
 export async function createPortAPIRequest<T>(
   method: Method,
