@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { PortAPIResponse } from './PortAPIResponse';
 import { Method, createPortAPIRequest, methods } from './PortAPIRequest';
+import { EventHandlers, EventName } from './PortAPIRequestHandler';
 
 export type IPortAPI = {
   [fn in Lowercase<Method>]:
@@ -17,7 +18,8 @@ export type IPortAPI = {
 
 export function createClient(
   baseURL: string,
-  headers?: Record<string, string>
+  headers?: Record<string, string>,
+  handlers?: EventHandlers,
 ) {
   const object: Partial<IPortAPI> = {};
 
@@ -33,7 +35,8 @@ export function createClient(
           `${baseURL}${path}`,
           schema,
           body,
-          headers
+          headers,
+          handlers,
         ) as Promise<PortAPIResponse<T>>;
     else
       object[method.toLowerCase() as Lowercase<Method>] = <T>(
@@ -45,7 +48,8 @@ export function createClient(
           `${baseURL}${path}`,
           schema,
           undefined,
-          headers
+          headers,
+          handlers,
         ) as Promise<PortAPIResponse<T>>;
   });
 
