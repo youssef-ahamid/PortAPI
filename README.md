@@ -11,7 +11,7 @@ pnpm add portapi #pnpm
 ## Basic Usage
 
 ```typescript
-import PortAPI from 'portapi';
+import { createClient } from 'portapi';
 import { z } from 'zod';
 
 const client = createClient('https://jsonplaceholder.typicode.com/', {
@@ -49,7 +49,7 @@ client
 ## Advanced Usage
 
 ```typescript
-import PortAPI from 'portapi';
+import { createClient } from 'portapi';
 import { z } from 'zod';
 
 const client = createClient(
