@@ -22,15 +22,18 @@ export async function createPortAPIRequest<T>(
   schema?: z.ZodSchema<T>,
   body?: any,
   headers: Record<string, string> = {},
-  handlers?: EventHandlers
+  handlers?: Partial<EventHandlers>
 ) {
+  handlers?.beforeRequest?.({ method, url, body, headers });
+
   const response = await fetch(url, {
     method,
     body: JSON.stringify(body),
     headers: {
       'Content-Type': 'application/json',
       ...headers
-    }
+    },
+    ...(handlers?.onRequest?.({ method, url, body, headers }) ?? {})
   });
 
   if (response.status === 401) {
@@ -88,9 +91,16 @@ export async function createPortAPIRequest<T>(
 }
 
 export type PortAPIRequest<T> = (
-  method: string,
+  method: Method,
   url: string,
   schema?: z.ZodSchema<T>,
   body?: any,
   headers?: Record<string, string>
 ) => Promise<PortAPIResponse<T>>;
+
+export type RequestOptions = {
+  method: Method;
+  url: string;
+  body?: any;
+  headers?: Record<string, string>;
+};
