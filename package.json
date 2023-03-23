@@ -1,20 +1,52 @@
 {
-  "name": "portapi-helper",
-  "version": "0.0.5",
-  "description": "Make multifarious requests to any server with ease.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "portapi",
+  "version": "1.0.0",
+  "description": "Easy-peasy, heavily typed, and zod validated requests for browsers, Node, and React Native.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "default": {
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
+      }
+    },
+    "./package.json": "./package.json"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/youssef-ahamid/portapi.git"
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm build && node dist/index",
+    "test": "vitest run --passWithNoTests",
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "lint": "tsc",
+    "format": "prettier --config .prettierrc --write .",
+    "clean": "pnpm run format && pnpm run lint && pnpm run test",
+    "change": "changeset && changeset version",
+    "release-no-test": "pnpm run build && changeset publish",
+    "release": "pnpm run clean && pnpm run build && changeset publish"
   },
   "keywords": [
-    "helper",
-    "api"
+    "typescript",
+    "http-client",
+    "javascript",
+    "nodejs"
   ],
-  "type": "module",
-  "author": "youssef-ahamid",
-  "license": "MIT"
+  "author": "Youssef Abdelhamid",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/youssef-ahamid/PortAPI.git"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.26.0",
+    "prettier": "^2.8.4",
+    "tsup": "^6.5.0",
+    "typescript": "^4.9.5",
+    "vitest": "^0.28.4"
+  },
+  "dependencies": {
+    "cross-fetch": "^3.1.5",
+    "zod": "^3.20.2"
+  }
 }

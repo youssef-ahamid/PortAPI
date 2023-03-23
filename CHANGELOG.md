@@ -1,12 +1,10 @@
 # PortAPI
 
-Easy-peasy, heavily typed, and zod validated requests for browsers, Node, and React Native. Inspired by trpc.
+## 1.0.0
 
-```bash
-npm i portapi #npm
-yarn add portapi #yarn
-pnpm add portapi #pnpm
-```
+### Major Changes
+
+Easy-peasy, heavily typed, and zod validated requests for browsers, Node, and React Native. Inspired by trpc.
 
 ## Basic Usage
 
