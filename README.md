@@ -1,298 +1,176 @@
 # PortAPI
 
-Send requests from the client-side to any backend server in a couple lines of code
-
-## A simple API request
-
-```javascript
-import API from 'portapi';
-const myAPI = new API('api-url');
-
-myAPI.post('blog', {
-  title: 'Intro to PortAPI',
-  content: '<p>Making requests with PortAPI is easy!</p>'
-});
-```
-
-PortAPI has several useful functions that simplify frontend-to-backend communication, namely reading, creating, and manipulating data.
-
-## Installation
-
-Create a new project folder or open an existing one and install the PortAPI helper:
+Easy-peasy, heavily typed, and zod validated requests for browsers, Node, and React Native. Inspired by trpc.
 
 ```bash
-npm i portapi-helper
+npm i portapi #npm
+yarn add portapi #yarn
+pnpm add portapi #pnpm
 ```
 
-Create the file `API.js` and point the helper to a local or live server
+## Basic Usage
 
-```javascript
-// API.js
-import API from 'portapi';
 
-const server = 'http://localhost:3030/api/'; // API's base url
-export default new API(server);
-```
+```typescript
+import PortAPI from 'portapi';
+import { z } from 'zod';
 
-Use the helper anywhere in your project
-
-```javascript
-import API from './API.js';
-
-tutoruuAPI.get('user').then((data) => {
-  console.log(data);
-});
-```
-
-Output
-
-```bash
-{
-  "users": [...],
-  "total": 1782
-}
-```
-
-## Usage
-
-As we've just seen, it is very simple to make a request to an unauthenticated server. What if we want to establish authenticated connections? Moreover, what if we want to add options to the request, such as content-type, caching, cors, refferrer, etc.? There's a simple, declarative way to do it with PortAPI:
-
-```javascript
-const myAPI = new API('api-url', {
+const client = createClient('https://jsonplaceholder.typicode.com/', {
   headers: {
-    authorization: 'Bearer SOME_TOKEN',
-    contentType: 'application/x-www-form-urlencoded' // defaults to 'application/json'
-  },
-  mode: 'cors', // no-cors, *cors, same-origin
-  cache: 'no-cache' // *default, no-cache, reload, force-cache, only-if-cached
-});
-```
+    'content-type': 'application/json'
+  }
+})
 
-> Options that can be passed here are exactly the same as the ones available on the [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch), as it uses it under the hood.
-
-Now that the API instance `myAPI` was declrared the desired options, any request using this instance will carry these options, regardless of where we're making them in the codebase.
-
-You never need to declare several connections to the same server with different authentication credentials or options. For example, some API routes may require the user to be authenticated. You would use an unauthenticated API instance to make requests that don't require an auth token, but you need not create a seperate instance for handling requests that require authentication. Just use the options interface:
-
-```
-myAPI.options.headers['authorization'] = 'YOUR-AUTH-TOKEN';
-```
-
-You can also change the base api url
-
-```
-myAPI.url = "new-api-url"
-```
-
-> Not recommended. It's better practice to create a seperate server instance, but there may be some cases where this is useful.
-
-Now let's see what you can do with an PortAPI instance.
-
-## Methods
-
-PortAPI instances have HTTP-requests-as-methods, namely [GET](#get), [POST](#post), [PATCH](#patch), and [DELETE](#delete). When paired with [query-request](https://www.npmjs.com/package/query-request) on the backend, we can use utility functions such as [search](#search), [sort](#sort), [filter](#filter), [paginate](#paginate), [timebox](#timebox), [populate](#populate) (mongoDB databases only), and [query](#query)
-
-### Get
-
-Execute a `GET` request
-
-```javascript
-const users = await myAPI.get('user');
-```
-
-### Post
-
-Execute a `POST` request
-
-```javascript
-const users = await myAPI.post('user', {
-  name: 'PortAPI User',
-  email: 'example@domain.com'
-});
-```
-
-### Patch
-
-Execute a `PATCH` request
-
-```javascript
-const user = await myAPI.patch('user/USER_ID', {
-  name: 'Updated PortAPI User'
-});
-```
-
-### Delete
-
-Execute a `DELETE` request
-
-```javascript
-const user = await myAPI.delete('user/USER_ID');
-```
-
-> The following methods only work if the server/endpoint has query-request activated.
-
-### Search
-
-Weighted full-text search
-
-```javascript
-const users = await myAPI.search('user', {
-  paths: ['name', 'email'],
-  caseSensitive: true, // default is false
-  value: 'PortAPI'
-});
-```
-
-This searches the specified paths and returns a ranked list of items. We can also easily add weights to different paths:
-
-```javascript
-const users = await myAPI.search('user', {
-  paths: [
-    {
-      name: 'name',
-      weight: 0.3
-    },
-    {
-      name: 'email',
-      weight: 0.7
+client
+  .get('todos/1')
+  .then(response => {
+    if (!response.success) {
+      return console.error(response.error.toString());
     }
-  ],
-  value: 'PortAPI'
-});
+    
+    console.log(response.data); 
+  });
+
+// With Zod validation & heavy typing
+client
+  .get('todos/1',
+    z.object({
+      id: z.number(),
+      title: z.string
+    }))
+  .then(response => {
+    if (!response.success) {
+      return console.error(response.error.toString());
+    }
+    
+    console.log(response.data); // response.data { id: 1, title: 'delectus aut aute' }
+  });
 ```
 
-### Sort
+## Advanced Usage
 
-Returns sorted resources
+```typescript
+import PortAPI from 'portapi';
+import { z } from 'zod';
 
-```javascript
-// sorts the user by name in a descending fashion
-const users = await myAPI.sort('user', {
-  prop: "name",
-  direction: "desc" // defaults to 'asc',
-  function: 'locale' // comparison logic. Defaults to number comparison.
-});
+const client = createClient('https://jsonplaceholder.typicode.com/', {
+  headers: {
+    'content-type': 'application/json'
+  }
+}, {
+  onSuccess: (data) => {},
+  onFailedValidation: (error) => {},
+  beforeRequest: (request) => {}
+  // other handlers
+})
+
+client
+  .get('todos/1', 
+    z.object({ 
+      id: z.number(), 
+      title: z.string() 
+    }))
+  .then(response => {
+    if (!response.success) {
+      return console.error(response.error.toString());
+    }
+    
+    console.log(response.data); // response.data { id: 1, title: 'delectus aut aute' }
+  });
 ```
 
-### Filter
+### Request Handlers
 
-Returns filtered resources
+Request handlers intercept request at different stages in the request lifecycle.
 
-```javascript
-// returns users with 'example' in their email
-const users = await myAPI.filter('user', {
-  value: 'example',
-  prop: 'email',
-  function: 'in'
-});
+#### `beforeRequest`
+Called before the execution of a request
+
+```typescript
+const client = createClient('https://jsonplaceholder.typicode.com/', {}, {
+  beforeRequest: (request: RequestOptions) => {
+    console.log(request.method, request.url, request.body, request.headers)
+  }
+})
 ```
 
-You can read about all the available filtering functions [here](https://docs.tutoruu.com/helpers/queries#available-filter-functions).
+#### `onRequest`
+Called during the execution of request to mutate the request. Useful for appending the request headers and body.
 
-### Paginate
-
-Splits up the resources and returns a particular page
-
-```javascript
-// gets items # 51 - 75
-const users = await myAPI.paginate('user', {
-  limit: 25, // items per page
-  page: 3
-});
+```typescript
+const protectedClient = createClient('https://jsonplaceholder.typicode.com/', {}, {
+  onRequest: (request: RequestOptions) => {
+    return {
+      headers: {
+        Authorization: 'Bearer ' + token
+      }
+    }
+  }
+})
 ```
 
-### Timebox
+#### `onFailedAuthorization`
+Called when a request returns a `403: Unauthorized` status code
 
-Get items created/updated in a given timeframe
-
-```javascript
-// gets users created in August 2022
-const users = await myAPI.timebox('user', {
-  created_after: '2022-08-01',
-  created_before: '2022-08-31'
-});
-```
-
-This assumes that there's a date prop on the model, createdAt, that tracks when the resource was created. No worries iff it's tracked by a different prop, we can specify it in the timebox options:
-
-```javascript
-// gets users created in August 2022, using the
-// "timestamp" property on the user
-const users = await myAPI.timebox('user', {
-  created_after: '2022-08-01',
-  created_before: '2022-08-31',
-  created_prop: 'timestamp'
-});
-```
-
-This works exactly the same for timeboxing updated resourses
-
-```javascript
-// gets users updated in August 2022, using the
-// "updated_timestamp" property on the user
-const users = await myAPI.timebox('user', {
-  updated_after: '2022-08-01',
-  updated_before: '2022-08-31',
-  updated_prop: 'updated_timestamp'
-});
-```
-
-### Populate
-
-(mongoDB only) Get a populated resource
-
-```javascript
-// gets the users populated reviews as well as his
-// classes, their students, and each of their reviews
-const users = await myAPI.populate('user/USER_ID', [
-  'reviews',
-  'classes.students.reviews'
-]);
-```
-
-### Query
-
-Execute multiple query functions at once. It's very common to paginate search results, so how do we do that with PortAPI?
-
-```javascript
-// get the first 25 search results
-const users = await myAPI.query('user', {
-  search: {
-    paths: ['name', 'email'],
-    value: 'PortAPI'
-  },
-  paginate: {
-    limit: 25,
-    page: 1
+```typescript
+const client = createClient('https://jsonplaceholder.typicode.com/', {}, {
+  onFailedAuthorization: () => {
+    console.log("can't do that!")
   }
 });
 ```
 
-Similarly, we can add any of the above methods to the query options as props
+#### `onFailedAuthentication`
+Called when a request returns a `401: Unauthenticated` status code
 
-```javascript
-// searches users created in august that contain
-// example in their email, and returns the first
-// 25 results
-const users = await myAPI.query('user', {
-  timebox: {
-    created_after: "2022-08-01",
-    created_before: "2022-08-31"
-  },
-  filter: {
-    value: "example",
-    prop: "email",
-    function: "in"
-  }
-  search: {
-    paths: ["name", "email"],
-    value: "PortAPI"
-  },
-  paginate: {
-    limit: 25,
-    page: 1
+```typescript
+const client = createClient('https://jsonplaceholder.typicode.com/', {}, {
+  onFailedAuthentication: () => {
+    location.replace('https://www.my-awesome.app/login');
   }
 });
 ```
 
-Cool, right?
+#### `onFailedRequest`
+Called when a request returns a `5xx` status code 
+
+```typescript
+const client = createClient('https://jsonplaceholder.typicode.com/', {}, {
+  onFailedRequest: (response: any) => {
+    // do something
+  }
+});
+```
+
+#### `onFailedParse`
+Called when `json.parse()` fails
+
+```typescript
+const client = createClient('https://jsonplaceholder.typicode.com/', {}, {
+  onFailedParse: () => {
+    // do something
+  }
+})
+```
+
+#### `onFailedValidation`
+Called when zod validation fails
+
+```typescript
+const client = createClient('https://jsonplaceholder.typicode.com/', {}, {
+  onFailedValidation: (error: z.ZodIssue[]) => {
+    console.error(error.join('\n'));
+  }
+})
+```
+
+#### `onSuccess`
+Called after successful completion of a request
+
+```typescript
+const client = createClient('https://jsonplaceholder.typicode.com/', {}, {
+  onSuccess: (data) => {
+    // do something
+  }
+})
+```
