@@ -23,7 +23,7 @@ export async function createPortAPIRequest<T>(
   body?: any,
   headers: Record<string, string> = {},
   handlers?: Partial<EventHandlers>
-) {  
+) {
   handlers?.beforeRequest?.({ method, url, body, headers });
   if (handlers?.onRequest) {
     const modifiedRequest =

@@ -17,11 +17,11 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm build && node dist/index",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "lint": "tsc",
     "format": "prettier --config .prettierrc --write .",
-    "clean": "pnpm run format && pnpm run lint",
+    "clean": "pnpm run format && pnpm run lint && pnpm run test",
     "change": "changeset && changeset version",
     "release-no-test": "pnpm run build && changeset publish",
     "release": "pnpm run clean && pnpm run build && changeset publish"
