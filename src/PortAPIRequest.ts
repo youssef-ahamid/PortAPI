@@ -23,8 +23,30 @@ export async function createPortAPIRequest<T>(
   body?: any,
   headers: Record<string, string> = {},
   handlers?: Partial<EventHandlers>
-) {
+) {  
   handlers?.beforeRequest?.({ method, url, body, headers });
+  if (handlers?.onRequest) {
+    const modifiedRequest =
+      handlers.onRequest?.({
+        method,
+        url,
+        body,
+        headers
+      }) ?? {};
+
+    if (modifiedRequest.body)
+      body = {
+        ...(body ?? {}),
+        ...modifiedRequest.body
+      };
+    if (modifiedRequest.headers)
+      headers = {
+        ...(headers ?? {}),
+        ...modifiedRequest.headers
+      };
+    if (modifiedRequest.method) method = modifiedRequest.method;
+    if (modifiedRequest.url) url += modifiedRequest.url;
+  }
 
   const response = await fetch(url, {
     method,
@@ -32,8 +54,7 @@ export async function createPortAPIRequest<T>(
     headers: {
       'Content-Type': 'application/json',
       ...headers
-    },
-    ...(handlers?.onRequest?.({ method, url, body, headers }) ?? {})
+    }
   });
 
   if (response.status === 401) {

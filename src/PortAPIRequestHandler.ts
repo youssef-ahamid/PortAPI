@@ -21,6 +21,6 @@ export type EventHandlers = {
   onFailedParse: () => any;
   onFailedAuthorization: () => any;
   onFailedAuthentication: () => any;
-  onRequest: (request: RequestOptions) => Partial<RequestOptions>;
+  onRequest: (request: RequestOptions) => Partial<RequestOptions> | void;
   beforeRequest: (request: RequestOptions) => any;
 };

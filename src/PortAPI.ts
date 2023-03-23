@@ -19,7 +19,7 @@ export type IPortAPI = {
 export function createClient(
   baseURL: string,
   headers?: Record<string, string>,
-  handlers?: EventHandlers,
+  handlers?: Partial<EventHandlers>
 ) {
   const object: Partial<IPortAPI> = {};
 
@@ -36,7 +36,7 @@ export function createClient(
           schema,
           body,
           headers,
-          handlers,
+          handlers
         ) as Promise<PortAPIResponse<T>>;
     else
       object[method.toLowerCase() as Lowercase<Method>] = <T>(
@@ -49,7 +49,7 @@ export function createClient(
           schema,
           undefined,
           headers,
-          handlers,
+          handlers
         ) as Promise<PortAPIResponse<T>>;
   });
 

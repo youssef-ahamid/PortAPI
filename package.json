@@ -8,15 +8,15 @@
   "exports": {
     ".": {
       "default": {
-        "require": "./dist/index.js",
-        "default": "./dist/index.mjs"
+        "require": "./dist/index.cjs",
+        "default": "./dist/index.js"
       }
     },
     "./package.json": "./package.json"
   },
   "type": "module",
   "scripts": {
-    "dev": "vitest",
+    "dev": "pnpm build && node dist/index",
     "test": "vitest run",
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "lint": "tsc",
