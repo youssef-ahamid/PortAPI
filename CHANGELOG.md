@@ -9,10 +9,10 @@ Easy-peasy, heavily typed, and zod validated requests for browsers, Node, and Re
 ## Basic Usage
 
 ```typescript
-import PortAPI from 'portapi';
+import { PortAPI } from 'portapi-helper';
 import { z } from 'zod';
 
-const client = createClient('https://jsonplaceholder.typicode.com/', {
+const client = PortAPI.createClient('https://jsonplaceholder.typicode.com/', {
   headers: {
     'content-type': 'application/json'
   }
@@ -47,10 +47,10 @@ client
 ## Advanced Usage
 
 ```typescript
-import PortAPI from 'portapi';
+import { PortAPI } from 'portapi-helper';
 import { z } from 'zod';
 
-const client = createClient(
+const client = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {
     headers: {
@@ -91,7 +91,7 @@ Request handlers intercept request at different stages in the request lifecycle.
 Called before the execution of a request
 
 ```typescript
-const client = createClient(
+const client = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {},
   {
@@ -107,7 +107,7 @@ const client = createClient(
 Called during the execution of request to mutate the request. Useful for appending the request headers and body.
 
 ```typescript
-const protectedClient = createClient(
+const protectedClient = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {},
   {
@@ -127,7 +127,7 @@ const protectedClient = createClient(
 Called when a request returns a `403: Unauthorized` status code
 
 ```typescript
-const client = createClient(
+const client = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {},
   {
@@ -143,7 +143,7 @@ const client = createClient(
 Called when a request returns a `401: Unauthenticated` status code
 
 ```typescript
-const client = createClient(
+const client = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {},
   {
@@ -159,7 +159,7 @@ const client = createClient(
 Called when a request returns a `5xx` status code
 
 ```typescript
-const client = createClient(
+const client = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {},
   {
@@ -175,7 +175,7 @@ const client = createClient(
 Called when `json.parse()` fails
 
 ```typescript
-const client = createClient(
+const client = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {},
   {
@@ -191,7 +191,7 @@ const client = createClient(
 Called when zod validation fails
 
 ```typescript
-const client = createClient(
+const client = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {},
   {
@@ -207,7 +207,7 @@ const client = createClient(
 Called after successful completion of a request
 
 ```typescript
-const client = createClient(
+const client = PortAPI.createClient(
   'https://jsonplaceholder.typicode.com/',
   {},
   {
